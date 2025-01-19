@@ -22,7 +22,7 @@ R_MAX_SPEED = 1200
 # l_target_steps : target steps for left motor
 # r_target_steps : target steps for right motor
 # Hz             : Herts
-
+# 
 # retuns         : A tuple containing actual left and right steps moved
 def move_steps(epuckcomm, l_speed_steps_s, r_speed_steps_s, 
                l_target_steps, r_target_steps, Hz=10):
@@ -92,35 +92,4 @@ def move_straight(epuckcomm, distance_mm, Hz=10):
     r_step_to_mm = steps_to_mm(steps_taken[1])
     
     return (l_step_to_mm + r_step_to_mm) / 2 # return mean of left and right steps
-    
 
-def main():
-    # setup for debug print
-    global _debug_as1_1
-    if len(sys.argv) == 2:
-        if sys.argv[1].lower() == 'true':
-            _debug_as1_1 = True
-            
-    epuckcomm = EPuckCom("/dev/cu.usbmodem3011", debug=False)
-    
-    if not epuckcomm.connect():
-        print("Could not connect to the robot, quitting :(")
-        return
-    
-    epuckcomm.enable_sensors = True
-    epuckcomm.send_command()
-    time.sleep(0.5)
-    
-    # print(move_steps(epuckcomm, R_MAX_SPEED, R_MAX_SPEED, 1000, 1000))
-    # print(move_steps(epuckcomm, -R_MAX_SPEED, -R_MAX_SPEED, 1000, 1000))
-    # print(move_straight(epuckcomm, 130))
-    # print(move_straight(epuckcomm, -130))
-    
-    # print(move_steps(epuckcomm, R_MAX_SPEED, -R_MAX_SPEED, 1290, 1290))
-    print(move_steps(epuckcomm, 0, R_MAX_SPEED, 0, 2580))
-    
-    epuckcomm.close()
-    
-    return
-    
-main()
