@@ -92,4 +92,3 @@ def move_straight(epuckcomm, distance_mm, Hz=10):
     r_step_to_mm = steps_to_mm(steps_taken[1])
     
     return (l_step_to_mm + r_step_to_mm) / 2 # return mean of left and right steps
-
