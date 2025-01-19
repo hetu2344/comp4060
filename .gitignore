@@ -1,0 +1,45 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# macOS Finder directory attributes
+Icon?
+._*
+
+# macOS resource fork files
+.Spotlight-V100
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Windows Explorer thumbnail cache files
+*.stackdump
+
+# Windows-specific system files
+*.lnk
+
+# General
+*.bak
+*.tmp
+*.swp
+*.swo
+*.log
+*.lock
+*.env
+
+# Python-specific (if applicable)
+__pycache__/
+*.pyc
+*.pyo
