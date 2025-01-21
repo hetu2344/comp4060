@@ -1,6 +1,10 @@
 import math
 
 # TODO:
+#   Date 21 Jan 2025
+#       - Define constants instead of hard-coded values
+#       - Measure the wheel diameter and wheel based and update it
+
 # steps_delta(last, current): int, calculates the difference in robot steps from the last
 # position to the current, accounting for counter wraparound, and returns it as a signed integer.
 # This one is tricky. Mine is 5 lines including def and return.
