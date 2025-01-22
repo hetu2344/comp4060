@@ -67,7 +67,7 @@ def print_pose(pos):
     # print(f'({pos[0]}mm, {pos[1]}mm, {pos[2] * 180 / math.pi}°)')
     # If for any reason the print_pose gives error then
     # uncomment the bottom line and comment the above line
-    print(f'({round(pos[0])}, {round(pos[1])}, {round(pos[2] * 180 / math.pi)})')
+    print(f'({round(pos[0])}, {round(pos[1])}, {round((pos[2] * 180 / math.pi) % 360)})')
     
 def ret_pose(pos):
     # print(f'({pos[0]}mm, {pos[1]}mm, {pos[2] * 180 / math.pi}°)')
