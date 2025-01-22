@@ -1,4 +1,6 @@
 from as1_part1 import *
+from epucklib.epuck_com import EPuckCom
+import sys
 
 RED = '\033[31m'
 RESET = '\033[0m'

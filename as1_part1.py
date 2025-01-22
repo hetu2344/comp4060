@@ -1,15 +1,8 @@
 # import epuck
-from epucklib.epuck_com import EPuckCom
 from As1lib import *
 
 import time
-import random
 import os
-import sys
-
-import numpy as np
-from PIL import Image
-import matplotlib.pyplot as plt
 
 _debug_as1_1 = False
 _script = os.path.basename(__file__)
