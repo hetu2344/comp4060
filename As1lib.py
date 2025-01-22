@@ -2,7 +2,7 @@ import math
 
 # TODO:
 #   Date 21 Jan 2025
-#       - Define constants instead of hard-coded values                         : Done by Het on Jan 25
+#       - Define constants instead of hard-coded values                         : Done by Het on 21 Jan
 #       - Measure the wheel diameter and wheel based and update it              :
 #       - Research for how many bit the stepper motor uses for counting steps   :
 
@@ -64,10 +64,16 @@ def mm_to_steps(mm):
 # print_pose ( (x_mm, y_mm, theta_rad) ), prints x,y,theta while converting theta to
 # degrees. 3 lines
 def print_pose(pos):
-    print(f'({pos[0]}mm, {pos[1]}mm, {pos[2] * 180 / math.pi}°)')
+    # print(f'({pos[0]}mm, {pos[1]}mm, {pos[2] * 180 / math.pi}°)')
     # If for any reason the print_pose gives error then
     # uncomment the bottom line and comment the above line
-    # print(f'({pos[0]} mm, {pos[1]} mm, {pos[2] * 180 / math.pi})')
+    print(f'({round(pos[0])}, {round(pos[1])}, {round((pos[2] * 180 / math.pi) % 360)})')
+    
+def ret_pose(pos):
+    # print(f'({pos[0]}mm, {pos[1]}mm, {pos[2] * 180 / math.pi}°)')
+    # If for any reason the print_pose gives error then
+    # uncomment the bottom line and comment the above line
+    return (pos[0], pos[1], pos[2] * 180 / math.pi)
     
 # print_pose((7, 7, math.pi))
 
