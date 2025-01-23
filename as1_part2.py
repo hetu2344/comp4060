@@ -74,12 +74,12 @@ def diff_drive_forward_kin(old_pos, left_steps, right_steps):
     
     new_pos = (rotation_matrix.dot(icc_to_orign_vec)) + origin_to_icc_vec
     
-    return (new_pos[0][0], new_pos[1][0], new_pos[2][0])
+    return (new_pos[0][0], new_pos[1][0], new_pos[2][0] % (2*math.pi))
 
 # print_pose(diff_drive_forward_kin( (0, 0, 0), 0, 0)) # should give: (0, 0, 0)
 # print_pose(diff_drive_forward_kin( (10, 20, 0), 1290, 1290)) # should give: (178, 20, 0)
-# print_pose(diff_drive_forward_kin( (10, 20, np.pi/2), 1290, 1290)) # should give: (10, 188, 90)
-# print_pose(diff_drive_forward_kin( (0, 0, 0), -1290, 1290)) #should give (0, 0,0)
+print_pose(diff_drive_forward_kin( (10, 20, np.pi/2), 1290, 1290)) # should give: (10, 188, 90)
+print_pose(diff_drive_forward_kin( (0, 0, 0), -1290, 1290)) #should give (0,0,0)
 # print_pose(diff_drive_forward_kin( (0, 0, np.pi/2), 1290, -1290)) #should give (0, 0, 90)
 # print_pose(diff_drive_forward_kin( (0, 0, 0), 2580, 0)) #should give (0, 0, 0)
 # print_pose(diff_drive_forward_kin( (1000, 1000, np.pi/2), 1290, -1290)) #should give (1000, 1000, 90)
