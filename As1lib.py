@@ -7,7 +7,7 @@ import math
 #       - Research for how many bit the stepper motor uses for counting steps   :
 
 # CONSTANTS
-COUNTER_BITS = 32 # No. of bits used by stepper motor to store counter
+COUNTER_BITS = 16 # No. of bits used by stepper motor to store counter
 WHEEL_DIAMETER = 41 # in mm
 STEPS_PER_REVOLUTION = 1000
 
