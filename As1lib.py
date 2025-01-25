@@ -4,7 +4,7 @@ import math
 #   Date 21 Jan 2025
 #       - Define constants instead of hard-coded values                         : Done by Het on 21 Jan
 #       - Measure the wheel diameter and wheel based and update it              :
-#       - Research for how many bit the stepper motor uses for counting steps   :
+#       - Research for how many bit the stepper motor uses for counting steps   : Done by Het on 23 Jan
 
 # CONSTANTS
 COUNTER_BITS = 16 # No. of bits used by stepper motor to store counter
