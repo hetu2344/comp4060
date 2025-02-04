@@ -9,6 +9,9 @@ def cal_R(left_speed, right_speed):
 
 def diff_drive_inverse_kin(distance_mm, speed_mm_s, omega_rad):
     
+    if speed_mm_s == 0:
+        return (0,0,0,0)
+    
     if distance_mm == 0:
         distance_mm = round(omega_rad * WHEEL_DIAMETER / 2)
         

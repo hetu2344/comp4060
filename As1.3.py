@@ -1,5 +1,6 @@
 from pynput import keyboard
 from epucklib.epuck_com import EPuckCom
+from as1_part2 import *
 import sys
 import time
 
@@ -131,9 +132,27 @@ def main():
         listener = keyboard.Listener(on_press=on_press, on_release=on_release)
         listener.start()
 
+        old_pos = (0, 0, 0) # origin
+        curr_pos = old_pos
+        left_steps = 0
+        right_steps = 0
+        r_last_left_steps = epuckcomm.state.sens_left_motor_steps
+        r_last_right_steps = epuckcomm.state.sens_right_motor_steps
         print('Moving the robot...\n')
+        print_pose_time = time.time()
         while True:
+            if time.time() - print_pose_time > 2:
+                print()
+                print_pose(curr_pos)
+                print()
+                print_pose_time = time.time()
             move_robot(epuckcomm, current_speed, current_speed)
+            left_steps = steps_delta(r_last_left_steps, epuckcomm.state.sens_left_motor_steps)
+            right_steps = steps_delta(r_last_right_steps, epuckcomm.state.sens_right_motor_steps)
+            r_last_left_steps = epuckcomm.state.sens_left_motor_steps
+            r_last_right_steps = epuckcomm.state.sens_right_motor_steps
+            curr_pos = diff_drive_forward_kin(old_pos, left_steps, right_steps)
+            old_pos = curr_pos
             time.sleep(0.1)
 
     except KeyboardInterrupt:
