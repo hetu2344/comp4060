@@ -5,10 +5,10 @@ import numpy as np
 WHEEL_BASE_MM = 53
 
 def cal_R(left_speed, right_speed):
-    return ( WHEEL_BASE_MM / 2) * ( ( left_speed + right_speed ) / ( right_speed - left_speed ))
+    return ( WHEEL_BASE_MM / 2 ) * ( ( left_speed + right_speed ) / ( right_speed - left_speed ) )
 
 def diff_drive_inverse_kin(distance_mm, speed_mm_s, omega_rad):
-    
+    # Stationary
     if speed_mm_s == 0:
         return (0,0,0,0)
     
@@ -31,8 +31,7 @@ def diff_drive_inverse_kin(distance_mm, speed_mm_s, omega_rad):
     left_steps_s = mm_to_steps(left_mm_s)
     right_steps_s = mm_to_steps(right_mm_s)
 
-    # Distance moved with velocities found * time to travel ? 
-    ### Need help with this one
+    # Distance moved = velocities * time to travel  
     left_steps = abs(left_steps_s * time_to_travel)
     right_steps = abs(right_steps_s * time_to_travel)
 
