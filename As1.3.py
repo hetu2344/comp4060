@@ -27,6 +27,7 @@ move_right = False # 'd'
 
 current_speed = wheel_speed['5'] # default speed = 500
 
+
 def get_epuckcomm():
     epuckcomm = EPuckCom(COM_PORT, debug=False)
     
@@ -41,7 +42,7 @@ def get_epuckcomm():
   
 # on_press event set the global variable to True if the key is pressed
 def on_press(key):
-    global move_left, move_right, move_forward, move_backward, current_speed
+    global move_left, move_right, move_forward, move_backward, current_speed, left_speed, right_speed
     try:   
         if key.char in wheel_speed:
             global current_speed
@@ -62,7 +63,7 @@ def on_press(key):
 
 # on_release event set the global variable to False if the key is pressed
 def on_release(key):
-    global move_left, move_right, move_forward, move_backward
+    global move_left, move_right, move_forward, move_backward, current_speed, left_speed, right_speed
     try:
         if key == keyboard.Key.esc:
             # Stop listener
@@ -76,35 +77,43 @@ def on_release(key):
             move_left = False
         elif key.char == 'd':
             move_right = False
-        # print(f'Key {key.char} released')
     except AttributeError:
         print(f'Special key {key} released')
 
 # This function moves the robot based on the key states
 def move_robot(epuckcomm, l_speed_steps_s, r_speed_steps_s):
-    # print(f'Left speed: {l_speed_steps_s}, Right speed: {r_speed_steps_s}')
     global move_left, move_right, move_forward, move_backward
     if not epuckcomm:
         return -1 # return -1 indicating error
 
-    # update the left wheel speed and right wheel speed
-    if move_forward:
-        epuckcomm.state.act_left_motor_speed = l_speed_steps_s
-        epuckcomm.state.act_right_motor_speed = r_speed_steps_s
-    elif move_backward:
-        epuckcomm.state.act_left_motor_speed = -l_speed_steps_s
-        epuckcomm.state.act_right_motor_speed = -r_speed_steps_s
-    elif move_left:
-        epuckcomm.state.act_left_motor_speed = -l_speed_steps_s
-        epuckcomm.state.act_right_motor_speed = r_speed_steps_s
-    elif move_right:
-        epuckcomm.state.act_left_motor_speed = l_speed_steps_s
-        epuckcomm.state.act_right_motor_speed = -r_speed_steps_s
-    else:
-        epuckcomm.state.act_left_motor_speed = 0
-        epuckcomm.state.act_right_motor_speed = 0
+    epuckcomm.state.act_left_motor_speed = 0
+    epuckcomm.state.act_right_motor_speed = 0
+    if move_forward: # w key
+        epuckcomm.state.act_left_motor_speed += l_speed_steps_s
+        epuckcomm.state.act_right_motor_speed += r_speed_steps_s
+
+    elif move_backward: # s key
+        epuckcomm.state.act_left_motor_speed += -l_speed_steps_s
+        epuckcomm.state.act_right_motor_speed += -r_speed_steps_s
+
+    if move_left: # a key
+        epuckcomm.state.act_left_motor_speed -= l_speed_steps_s * 0.7
+        epuckcomm.state.act_right_motor_speed += r_speed_steps_s * 0.7
+    elif move_right: # d key
+        epuckcomm.state.act_left_motor_speed += l_speed_steps_s * 0.7
+        epuckcomm.state.act_right_motor_speed -= r_speed_steps_s * 0.7
+    
             
     epuckcomm.send_command() # send the command to the robot
+
+def calc_and_print_pose(epuckcomm, old_pos, last_l_steps, last_r_steps):
+    left_steps = steps_delta(last_l_steps, epuckcomm.state.sens_left_motor_steps)
+    right_steps = steps_delta(last_r_steps, epuckcomm.state.sens_right_motor_steps)
+    new_pos = diff_drive_forward_kin(old_pos, left_steps, right_steps)
+    print('Robot Position:', end="")
+    print_pose(new_pos)
+    return new_pos, epuckcomm.state.sens_left_motor_steps, epuckcomm.state.sens_right_motor_steps
+
 
 def main():
     try:
@@ -113,7 +122,7 @@ def main():
             print('Quitting the program')
             return
         
-        global COM_PORT, current_speed
+        global COM_PORT, current_speed, left_speed, right_speed
         COM_PORT = sys.argv[1]
 
         print('This will move the robot based on the key press (forward, backward, rotate counter-clockwise, rotate clockwise) for (w, s, a, d) respectively')
@@ -132,27 +141,19 @@ def main():
         listener = keyboard.Listener(on_press=on_press, on_release=on_release)
         listener.start()
 
-        old_pos = (0, 0, 0) # origin
-        curr_pos = old_pos
-        left_steps = 0
-        right_steps = 0
+        curr_pos = (0, 0, 0)
+        
         r_last_left_steps = epuckcomm.state.sens_left_motor_steps
         r_last_right_steps = epuckcomm.state.sens_right_motor_steps
         print('Moving the robot...\n')
         print_pose_time = time.time()
         while True:
-            if time.time() - print_pose_time > 2:
-                print()
-                print_pose(curr_pos)
-                print()
+            if time.time() - print_pose_time > 7:
+                curr_pos, r_last_left_steps, r_last_right_steps = calc_and_print_pose(epuckcomm, curr_pos, r_last_left_steps, r_last_right_steps)
                 print_pose_time = time.time()
+            
             move_robot(epuckcomm, current_speed, current_speed)
-            left_steps = steps_delta(r_last_left_steps, epuckcomm.state.sens_left_motor_steps)
-            right_steps = steps_delta(r_last_right_steps, epuckcomm.state.sens_right_motor_steps)
-            r_last_left_steps = epuckcomm.state.sens_left_motor_steps
-            r_last_right_steps = epuckcomm.state.sens_right_motor_steps
-            curr_pos = diff_drive_forward_kin(old_pos, left_steps, right_steps)
-            old_pos = curr_pos
+            
             time.sleep(0.1)
 
     except KeyboardInterrupt:
