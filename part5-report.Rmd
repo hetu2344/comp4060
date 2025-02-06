@@ -1,0 +1,111 @@
+---
+title: "COMP 4060: Assignment 1 Part 5 Report"
+author: "Het Patel"
+date: "2025-02-06"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, warning=FALSE, message=FALSE}
+# required libraries
+library(tidyverse)
+library(ggplot2)
+```
+
+## R calculations for Mean and Standard Deviation
+
+```{r, echo=FALSE}
+# reading the data
+data <- read.csv("~/Documents/comp4060/assignments/as1/readings.csv")
+head(data)
+
+# mutating data to calculate the error terms, their mean and standard deviations
+data.10 <- filter(data, Hz == 10)
+data.1 <- filter(data, Hz == 1)
+data.30 <- filter(data, Hz == 30)
+
+data <- data %>%
+            mutate(x_diff = 0 - X) %>%
+            mutate(y_diff = Y - 1000) %>%
+            mutate(xdiff_bar = mean(x_diff)) %>%
+            mutate(ydiff_bar = mean(y_diff)) %>%
+            mutate(xdiff_sd = sd(x_diff)) %>%
+            mutate(ydiff_sd = sd(y_diff))
+
+data.10 <- data.10 %>%
+            mutate(x_diff = 0 - X) %>%
+            mutate(y_diff = Y - 1000) %>%
+            mutate(xdiff_bar = mean(x_diff)) %>%
+            mutate(ydiff_bar = mean(y_diff)) %>%
+            mutate(xdiff_sd = sd(x_diff)) %>%
+            mutate(ydiff_sd = sd(y_diff))
+
+data.1 <- data.1 %>%
+            mutate(x_diff = 0 - X) %>%
+            mutate(y_diff = Y - 1000) %>%
+            mutate(xdiff_bar.10 = mean(x_diff)) %>%
+            mutate(ydiff_bar = mean(y_diff)) %>%
+            mutate(xdiff_sd = sd(x_diff)) %>%
+            mutate(ydiff_sd = sd(y_diff))
+
+data.30 <- data.30 %>%
+            mutate(x_diff = 0 - X) %>%
+            mutate(y_diff = Y - 1000) %>%
+            mutate(xdiff_bar = mean(x_diff)) %>%
+            mutate(ydiff_bar = mean(y_diff)) %>%
+            mutate(xdiff_sd = sd(x_diff)) %>%
+            mutate(ydiff_sd = sd(y_diff))
+
+head(data.10)
+head(data.1)
+head(data.30)
+```
+
+## Mean and Standard for Hz = 10
+
+$\bar{x} = -23.4$, $\bar{y} = 25.6$
+
+$sd_{x} = 15.46466$, $sd_{y} = 5.125102$
+
+## Mean and Standard for Hz = 1
+
+$\bar{x} = -33.2$, $\bar{y} = 149.9$
+
+$sd_{x} = 14.45145$, $sd_{y} = 2.685351$
+
+## Mean and Standard for Hz = 30
+
+$\bar{x} = -31.3$, $\bar{y} = 5.3$
+
+$sd_{x} = 24.1893$, $sd_{y} = 36.07415$
+
+## Scatter Plots
+
+```{r, echo=FALSE}
+plot.10 <- ggplot(data.10, aes(x = x_diff, y = y_diff)) + 
+           geom_point(col = "blue") +
+           labs(x = "x error", y = "y error", title = "1m, 10hz, 100mm/s")
+           
+plot.10
+
+plot.1 <- ggplot(data.1, aes(x = x_diff, y = y_diff)) + 
+  geom_point(col = "blue") +
+  labs(x = "x error", y = "y error", title = "1m, 1hz, 100mm/s")
+
+plot.1
+
+plot.30 <- ggplot(data.30, aes(x = x_diff, y = y_diff)) + 
+  geom_point(col = "blue") +
+  labs(x = "x error", y = "y error", title = "1m, 30hz, 100mm/s")
+
+plot.30
+
+plot.all <- ggplot(data, aes(x = x_diff, y = y_diff, color = factor(Hz))) + 
+  geom_point() +
+  labs(x = "x error", y = "y error", title = "1m, 1hz/10hz/30hz, 100mm/s")
+
+plot.all
+```
