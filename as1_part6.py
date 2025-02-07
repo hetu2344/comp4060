@@ -7,7 +7,6 @@ import numpy as np
 
 COM_PORT = ''
 TRAVEL_DISTANCE_MM = 500 # 0.5m = 500mm
-VELOCITY = 300
 
 def get_epuckcomm():
     epuckcomm = EPuckCom(COM_PORT, debug=False)
@@ -32,14 +31,15 @@ def main():
         COM_PORT = sys.argv[1]
 
         epuckcomm = get_epuckcomm()
+
+        # Check for connection
+        if not epuckcomm:
+            return
+        
         print('Giving time for the robot to get the request...')
         time.sleep(0.5) # give time for the robot to get the request
         print('Robot is ready to move...\n')
 
-        # Check for connection
-        if not epuckcomm:
-            return -1
-        
         print('Moving the robot forward 0.5m')
         # Move straight 0.5m or 500mm
         distance_moved = move_straight(epuckcomm, TRAVEL_DISTANCE_MM) 
@@ -48,18 +48,13 @@ def main():
         else:
             print(f'Robot moved: {distance_moved}!')
             print('Turning around')
+            move_steps(epuckcomm, *diff_drive_inverse_kin(0, R_MAX_SPEED, -np.pi), Hz=16) # Tune Hz for correct angle or else it would not turn 180 degree
+                        
+            print('Moving back to original location')
+            distance_moved = move_straight(epuckcomm, TRAVEL_DISTANCE_MM)
 
-            lsp, rsp, lst, rsp = 0
-
-            left_speed_s, right_speed_s, left_steps, right_steps = diff_drive_inverse_kin(0, VELOCITY / 5, -np.pi/2)
-            # Set speed for wheel to turn
-            epuckcomm.state.act_left_motor_speed = left_speed_s
-            epuckcomm.state.act_right_motor_speed = right_speed_s
-
-            # Set steps for wheel to take for 180 degree turn
-            epuckcomm.state.sens_left_motor_steps = left_steps
-            epuckcomm.state.sens_right_motor_steps = right_steps
-
+            print('Done!')
+            
     except KeyboardInterrupt:
             print('Quitting the program')
     finally:
