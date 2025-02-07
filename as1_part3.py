@@ -118,7 +118,7 @@ def calc_and_print_pose(epuckcomm, old_pos, last_l_steps, last_r_steps):
 def main():
     try:
         if len(sys.argv) != 2:
-            print('Usage: python As1.3.py <COM_PORT>')
+            print('Usage: python as1_part3.py <COM_PORT>')
             print('Quitting the program')
             return
         
