@@ -7,6 +7,7 @@ import numpy as np
 
 COM_PORT = ''
 TRAVEL_DISTANCE_MM = 500 # 0.5m = 500mm
+WHEEL_SPEED = 500
 
 def get_epuckcomm():
     epuckcomm = EPuckCom(COM_PORT, debug=False)
@@ -48,11 +49,16 @@ def main():
         else:
             print(f'Robot moved: {distance_moved}!')
             print('Turning around')
-            move_steps(epuckcomm, *diff_drive_inverse_kin(0, R_MAX_SPEED, -np.pi), Hz=16) # Tune Hz for correct angle or else it would not turn 180 degree
-                        
-            print('Moving back to original location')
-            distance_moved = move_straight(epuckcomm, TRAVEL_DISTANCE_MM)
+            time.sleep(0.1)
+            left_steps, right_steps = move_steps(epuckcomm, *diff_drive_inverse_kin(0, WHEEL_SPEED, -np.pi), Hz=30) # Tune Hz for correct angle or else it would not turn 180 degree
+            print(left_steps, right_steps)
 
+            print('Moving back to original location')
+            time.sleep(0.1)
+            distance_moved = move_straight(epuckcomm, TRAVEL_DISTANCE_MM)
+            print(f'Robot moved: {distance_moved}!')
+            if not distance_moved or distance_moved == 0:
+                return  
             print('Done!')
             
     except KeyboardInterrupt:
